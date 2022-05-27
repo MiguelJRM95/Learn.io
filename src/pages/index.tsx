@@ -1,7 +1,20 @@
 import type { NextPage } from 'next';
 import Image from 'next/image';
-import cross from '../components/cross.png';
+import { useState } from 'react';
+import logo from '../components/logo.svg';
+import { supabase } from '../utils/supabaseClient';
 const Home: NextPage = () => {
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const signInWithEmail = async (e: { preventDefault: () => void }) => {
+    e.preventDefault();
+    const { error } = await supabase.auth.signUp({
+      email: email,
+      password: password,
+    });
+    if (error) throw error;
+  };
+
   return (
     <div className="flex w-full flex-wrap">
       <div className="flex w-full flex-col md:w-1/2">
@@ -22,6 +35,8 @@ const Home: NextPage = () => {
                 type="email"
                 id="email"
                 placeholder="your@email.com"
+                value={email}
+                onInput={(e) => setEmail((e.target as HTMLInputElement).value)}
                 className="focus:shadow-outline mt-1 w-full appearance-none rounded border py-2 px-3 leading-tight text-gray-700 shadow focus:outline-none"
               />
             </div>
@@ -34,15 +49,19 @@ const Home: NextPage = () => {
                 type="password"
                 id="password"
                 placeholder="Password"
+                value={password}
+                onInput={(e) => setPassword((e.target as HTMLInputElement).value)}
                 className="focus:shadow-outline mt-1 w-full appearance-none rounded border py-2 px-3 leading-tight text-gray-700 shadow focus:outline-none"
               />
             </div>
 
-            <input
+            <button
               type="submit"
-              value="Log In"
+              onClick={signInWithEmail}
               className="mt-8 bg-black p-2 text-lg font-bold text-white hover:bg-gray-700"
-            />
+            >
+              Login
+            </button>
           </form>
           <div className="pt-12 pb-12 text-center">
             <p>
@@ -54,13 +73,10 @@ const Home: NextPage = () => {
         </div>
       </div>
 
-      <div className="w-1/2 shadow-2xl">
-        <Image
-          layout="responsive"
-          className="hidden h-screen w-full object-cover md:block"
-          src={cross}
-          alt="test"
-        />
+      <div className="flex h-screen w-1/2 shadow-2xl">
+        <div className="inset-0 my-auto">
+          <Image width="1000px" className="mt-10 h-screen w-full" src={logo} alt="test" />
+        </div>
       </div>
     </div>
   );
