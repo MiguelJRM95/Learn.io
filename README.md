@@ -2,6 +2,15 @@
 
 ---
 
+# :mega: IMPORTANT!!!!
+
+You do need to creat at root directory level a .env.local file with
+
+- NEXT_PUBLIC_SUPABASE_URL
+- NEXT_PUBLIC_SUPABASE_KEY
+
+---
+
 This repository will have the Learn.io project with is going to be a educational platform
 
 This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
