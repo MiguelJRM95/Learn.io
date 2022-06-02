@@ -1,9 +1,44 @@
+/* eslint-disable react/jsx-no-undef */
 import type { NextPage } from 'next';
 import Head from 'next/head';
 import Image from 'next/image';
 import styles from '../utils/styles/Home.module.css';
+import { useRouter } from 'next/router';
+import { getFragmentParams } from '../utils/getters';
+import { signIn } from '../services/supabase/auth';
+import { useUser } from '../hooks/database/auth';
 
 const Home: NextPage = () => {
+  const { user, isLoading } = useUser();
+
+  const router = useRouter();
+  const isSignedIn = user;
+  let isWaitingForSignIn = false;
+  let refreshToken: string;
+
+  if (!isSignedIn) {
+    const fragmentParams = getFragmentParams(router.asPath);
+    refreshToken = fragmentParams.refresh_token;
+
+    if (refreshToken) {
+      const signUserInWithRefreshToken = () =>
+        signIn({
+          refreshToken,
+        });
+      isWaitingForSignIn = true;
+      signUserInWithRefreshToken();
+    }
+  }
+
+  if (isLoading || isWaitingForSignIn) {
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
+    //return <AuthLoadingScreen />;
+  }
+  /* is signed in */
+  //if (isSignedIn) return <SignedInPage />;
+
+  //return <SigninPage />;
   return (
     <div className={styles.container}>
       <Head>

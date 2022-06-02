@@ -1,6 +1,4 @@
-import { withPageAuth, getUser } from '@supabase/supabase-auth-helpers/nextjs';
-import { createClient } from '@supabase/supabase-auth-helpers/node_modules/@supabase/supabase-js';
-import { supabaseKey, supabaseUrl } from '../../utils/envVars';
+import { withPageAuth, getUser, supabaseClient } from '@supabase/supabase-auth-helpers/nextjs';
 
-const supabase = createClient(supabaseUrl, supabaseKey);
+const supabase = supabaseClient;
 export { supabase, withPageAuth, getUser };
