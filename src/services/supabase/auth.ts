@@ -8,7 +8,7 @@ export const signIn = (params: UserCredentials) => supabase.auth.signIn(params);
 
 export const signUp = (
   { email, password }: UserCredentials,
-  { first_name, last_name }: UserRawMetadata
+  { firstName, lastName }: UserRawMetadata
 ) =>
   supabase.auth.signUp(
     {
@@ -17,8 +17,8 @@ export const signUp = (
     },
     {
       data: {
-        first_name,
-        last_name,
+        first_name: firstName,
+        last_name: lastName,
       },
     }
   );

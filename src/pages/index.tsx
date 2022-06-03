@@ -7,6 +7,7 @@ import { useRouter } from 'next/router';
 import { getFragmentParams } from '../utils/getters';
 import { signIn } from '../services/supabase/auth';
 import { useUser } from '../hooks/database/auth';
+import Signup from './signup';
 
 const Home: NextPage = () => {
   const { user, isLoading } = useUser();
@@ -38,7 +39,7 @@ const Home: NextPage = () => {
   /* is signed in */
   //if (isSignedIn) return <SignedInPage />;
 
-  //return <SigninPage />;
+  return <Signup />;
   return (
     <div className={styles.container}>
       <Head>
