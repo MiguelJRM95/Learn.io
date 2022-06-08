@@ -1,3 +1,4 @@
+/* eslint-disable react/jsx-no-undef */
 import type { NextPage } from 'next';
 import Image from 'next/image';
 import { useState } from 'react';
