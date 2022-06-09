@@ -26,7 +26,13 @@ const Home: NextPage = () => {
     surname: Yup.string().required(),
   });
   const formOptions = { resolver: yupResolver(formSchema) };
-  const { register, handleSubmit, formState } = useForm(formOptions);
+  const { register, handleSubmit, formState } = useForm<{
+    name: string;
+    surname: string;
+    email: string;
+    password: string;
+    confirmPassword: string;
+  }>(formOptions);
   const { errors } = formState;
   const onSubmit = async () => {
     const data = await supabase.auth.signUp(
@@ -57,6 +63,36 @@ const Home: NextPage = () => {
         <div className="my-auto flex flex-col justify-center px-8 pt-8 md:justify-start md:px-24 md:pt-0 lg:px-32">
           <p className="text-center text-3xl font-semibold">Welcome to our platform.</p>
           <form className="flex flex-col pt-3 md:pt-3" onSubmit={handleSubmit(onSubmit)}>
+            <div className="flex flex-row justify-between">
+              <div className="flex w-full flex-col pt-4">
+                <label htmlFor="password" className="ml-2 text-lg">
+                  First Name
+                </label>
+                <input
+                  type="text"
+                  id="name"
+                  placeholder="Name"
+                  value={name}
+                  {...register('name')}
+                  onInput={(e) => setName((e.target as HTMLInputElement).value)}
+                  className="focus:shadow-outline mt-1 w-full appearance-none rounded border py-2 px-3 leading-tight text-gray-700 shadow focus:outline-none"
+                />
+              </div>
+              <div className="flex w-full flex-col pt-4">
+                <label htmlFor="password" className="ml-2 text-lg">
+                  Last Name
+                </label>
+                <input
+                  type="text"
+                  id="surname"
+                  placeholder="Surname"
+                  value={surname}
+                  {...register('surname')}
+                  onInput={(e) => setSurname((e.target as HTMLInputElement).value)}
+                  className="focus:shadow-outline mt-1 w-full appearance-none rounded border py-2 px-3 leading-tight text-gray-700 shadow focus:outline-none"
+                />
+              </div>
+            </div>
             <div className="flex flex-col pt-4">
               <label htmlFor="email" className="ml-2 text-lg">
                 Email
@@ -102,35 +138,6 @@ const Home: NextPage = () => {
                 className="focus:shadow-outline mt-1 w-full appearance-none rounded border py-2 px-3 leading-tight text-gray-700 shadow focus:outline-none"
               />
               <div className="text-error text-center">{errors.confirmPassword?.message}</div>
-            </div>
-
-            <div className="flex flex-col pt-4">
-              <label htmlFor="password" className="ml-2 text-lg">
-                First Name
-              </label>
-              <input
-                type="text"
-                id="name"
-                placeholder="Name"
-                value={name}
-                {...register('name')}
-                onInput={(e) => setName((e.target as HTMLInputElement).value)}
-                className="focus:shadow-outline mt-1 w-full appearance-none rounded border py-2 px-3 leading-tight text-gray-700 shadow focus:outline-none"
-              />
-            </div>
-            <div className="flex flex-col pt-4">
-              <label htmlFor="password" className="ml-2 text-lg">
-                Last Name
-              </label>
-              <input
-                type="text"
-                id="surname"
-                placeholder="Surname"
-                value={surname}
-                {...register('surname')}
-                onInput={(e) => setSurname((e.target as HTMLInputElement).value)}
-                className="focus:shadow-outline mt-1 w-full appearance-none rounded border py-2 px-3 leading-tight text-gray-700 shadow focus:outline-none"
-              />
             </div>
 
             <button
