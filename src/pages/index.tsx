@@ -8,6 +8,15 @@ import { supabase } from '../utils/supabaseClient';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as Yup from 'yup';
 import { useForm } from 'react-hook-form';
+
+type FormData = {
+  name: string;
+  surname: string;
+  email: string;
+  password: string;
+  confirmPassword: string;
+};
+
 const Home: NextPage = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -26,13 +35,7 @@ const Home: NextPage = () => {
     surname: Yup.string().required(),
   });
   const formOptions = { resolver: yupResolver(formSchema) };
-  const { register, handleSubmit, formState } = useForm<{
-    name: string;
-    surname: string;
-    email: string;
-    password: string;
-    confirmPassword: string;
-  }>(formOptions);
+  const { register, handleSubmit, formState } = useForm<FormData>(formOptions);
   const { errors } = formState;
   const onSubmit = async () => {
     const data = await supabase.auth.signUp(
