@@ -6,6 +6,9 @@ module.exports = {
   ],
   theme: {
     extend: {},
+    fontFamily: {
+      custom: ['Rubik', 'sans-serif'],
+    },
   },
   variants: {
     extend: {},
