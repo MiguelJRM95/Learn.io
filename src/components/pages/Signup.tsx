@@ -7,6 +7,8 @@ import * as Yup from 'yup';
 import { useForm } from 'react-hook-form';
 import Image from 'next/image';
 import logo from '../../assets/images/logo.svg';
+import { FormData } from '../../types/schemas/studentSignUpFormData';
+import { emailRegex } from '../../utils/patterns';
 
 export const Signup = () => {
   const [email, setEmail] = useState('');
@@ -16,23 +18,15 @@ export const Signup = () => {
   const [confirmPassword, setConfirmPassword] = useState('');
   const alert = useAlert();
 
-  type FormData = {
-    firstName: string;
-    lastName: string;
-    email: string;
-    password: string;
-    confirmPassword: string;
-  };
-
   const formSchema = Yup.object().shape({
-    email: Yup.string().required(),
+    email: Yup.string().matches(emailRegex).required(),
     password: Yup.string().min(8, 'Password must be at least 8 characters').required(),
     confirmPassword: Yup.string()
       .oneOf([Yup.ref('password')], 'Passwords do not match')
       .min(8, 'Password must be at least 8 characters')
       .required(),
-    name: Yup.string().required(),
-    surname: Yup.string().required(),
+    firstName: Yup.string().required(),
+    lastName: Yup.string().required(),
   });
 
   const formOptions = { resolver: yupResolver(formSchema) };
@@ -61,12 +55,12 @@ export const Signup = () => {
           <form className="flex flex-col pt-3 md:pt-3" onSubmit={handleSubmit(onSubmit)}>
             <div className="flex flex-row justify-between">
               <div className="flex w-full flex-col pt-4">
-                <label htmlFor="password" className="ml-2 text-lg">
+                <label htmlFor="firstName" className="ml-2 text-lg">
                   First Name
                 </label>
                 <input
                   type="text"
-                  id="name"
+                  id="firstName"
                   placeholder="First name"
                   value={firstName}
                   {...register('firstName')}
@@ -75,12 +69,12 @@ export const Signup = () => {
                 />
               </div>
               <div className="flex w-full flex-col pt-4">
-                <label htmlFor="password" className="ml-2 text-lg">
+                <label htmlFor="lastName" className="ml-2 text-lg">
                   Last Name
                 </label>
                 <input
                   type="text"
-                  id="surname"
+                  id="lastName"
                   placeholder="Last name"
                   value={lastName}
                   {...register('lastName')}
@@ -102,6 +96,9 @@ export const Signup = () => {
                 onInput={(e) => setEmail((e.target as HTMLInputElement).value)}
                 className="focus:shadow-outline mt-1 w-full appearance-none rounded border py-2 px-3 leading-tight text-gray-700 shadow focus:outline-none"
               />
+              <div className="text-error text-center">
+                {errors.email?.message ? 'Invalid email address' : null}
+              </div>
             </div>
 
             <div className="flex flex-col pt-4">
@@ -121,12 +118,12 @@ export const Signup = () => {
             </div>
 
             <div className="flex flex-col pt-4">
-              <label htmlFor="password" className="ml-2 text-lg">
+              <label htmlFor="repeatPassword" className="ml-2 text-lg">
                 Confirm Password
               </label>
               <input
                 type="password"
-                id="password"
+                id="repeatPassword"
                 placeholder="Repeat Password"
                 value={confirmPassword}
                 {...register('confirmPassword')}
