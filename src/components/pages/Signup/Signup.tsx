@@ -7,8 +7,8 @@ import * as Yup from 'yup';
 import { useForm } from 'react-hook-form';
 import Image from 'next/image';
 import logo from '../../assets/images/logo.svg';
-import { FormData } from '../../types/schemas/studentSignUpFormData';
-import { emailRegex } from '../../utils/patterns';
+import { FormData } from '../../../types/schemas/studentSignUpFormData';
+import { emailRegex } from '../../../utils/patterns';
 
 export const Signup = () => {
   const [email, setEmail] = useState('');

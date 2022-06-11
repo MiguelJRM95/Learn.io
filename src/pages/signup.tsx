@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { Signup as SignupPage } from '../components/pages/Signup';
+import { Signup as SignupPage } from '../components/pages/Signup/Signup';
 import { supabase } from '../services/supabase/supabaseClient';
 
 interface ServerSidePropTypes {
