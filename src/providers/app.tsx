@@ -9,7 +9,6 @@ import { AppProviderProps } from '../types/appProviderProps';
 import { reduxStore } from '../services/redux/store';
 import { supabase } from '../services/supabase/supabaseClient';
 import { Alert } from '../components/Alert/Alert';
-import { useUser } from '../hooks/database/auth';
 
 export const AppProvider = ({ children, profile, user }: AppProviderProps) => {
   return (
@@ -21,7 +20,7 @@ export const AppProvider = ({ children, profile, user }: AppProviderProps) => {
             supabase as any
           } /* conflict between expected type supabase client from supabasejs and given supabase client from supabase-auth-helpers*/
         >
-          <UserProvider supabaseClient={supabase} value={{ useUser: useUser }}>
+          <UserProvider supabaseClient={supabase}>
             <ProfileProvider profile={profile} user={user}>
               {children}
             </ProfileProvider>

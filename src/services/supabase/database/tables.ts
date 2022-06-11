@@ -1,6 +1,6 @@
 export const tables = {
   users: 'users',
-  users_subject: 'users_subject',
+  user_subject: 'user_subject',
   subject: 'subject',
   section: 'section',
   grades: 'grades',
