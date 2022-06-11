@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useAlert } from 'react-alert';
 import { signUpWithEmail } from './api';
 
@@ -6,8 +6,8 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import * as Yup from 'yup';
 import { useForm } from 'react-hook-form';
 import Image from 'next/image';
-import logo from '../../assets/images/logo.svg';
-import { FormData } from '../../../types/schemas/studentSignUpFormData';
+import logo from '../../../assets/images/logo.svg';
+import { SignUpFormData } from '../../../types/schemas/studentSignUpFormData';
 import { emailRegex } from '../../../utils/patterns';
 
 export const Signup = () => {
@@ -30,8 +30,20 @@ export const Signup = () => {
   });
 
   const formOptions = { resolver: yupResolver(formSchema) };
-  const { register, handleSubmit, formState } = useForm<FormData>(formOptions);
+  const { register, handleSubmit, formState, reset } = useForm<SignUpFormData>(formOptions);
   const { errors } = formState;
+
+  useEffect(() => {
+    if (formState.isSubmitSuccessful) {
+      reset({
+        firstName: '',
+        lastName: '',
+        email: '',
+        password: '',
+        confirmPassword: '',
+      });
+    }
+  }, [formState, reset]);
 
   const onSubmit = async () => {
     const { error, user } = await signUpWithEmail({ email, password }, { firstName, lastName });
@@ -114,7 +126,7 @@ export const Signup = () => {
                 onInput={(e) => setPassword((e.target as HTMLInputElement).value)}
                 className="focus:shadow-outline mt-1 w-full appearance-none rounded border py-2 px-3 leading-tight text-gray-700 shadow focus:outline-none"
               />
-              <div className="text-error text-center">{errors.confirmPassword?.message}</div>
+              <div className="text-error text-center">{errors.password?.message}</div>
             </div>
 
             <div className="flex flex-col pt-4">
