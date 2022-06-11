@@ -3,14 +3,13 @@ import type { NextPage } from 'next';
 import { useRouter } from 'next/router';
 import { getFragmentParams } from '../utils/getters';
 import { signIn } from '../services/supabase/auth';
-import { useUser } from '../hooks/database/auth';
 import { Signin as SignInPage } from '../components/pages/Signin/Signin';
 import AuthLoadingScreen from '../components/AuthLoadingScreen/AuthLoadingScreen';
 import { SignedIn as SignedInPage } from '../components/pages/SignedIn/SignedIn';
+import { useUser } from '@supabase/supabase-auth-helpers/react';
 
 const Home: NextPage = () => {
   const { user, isLoading } = useUser();
-  console.log(user);
   const router = useRouter();
   const isSignedIn = user;
   let isWaitingForSignIn = false;
@@ -36,6 +35,7 @@ const Home: NextPage = () => {
     return <AuthLoadingScreen />;
   }
   /* is signed in */
+  console.log(user);
   if (isSignedIn) return <SignedInPage />;
 
   return <SignInPage />;
