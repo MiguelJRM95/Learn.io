@@ -8,8 +8,14 @@ import { AlertTemplateProps } from 'react-alert';
     Refer to https://github.com/schiehll/react-alert#using-a-custom-alert-template
     for more information
 
-    options parameters was an object for style
-    export const Alert = ({ options, message }: AlertTemplateProps) => <p>{message}</p>;
 */
 
-export const Alert = ({ message }: AlertTemplateProps) => <p>{message}</p>;
+export const Alert = ({ options, message }: AlertTemplateProps) => (
+  <div
+    className={`${
+      options.type === 'success' ? 'bg-sky-500' : 'bg-red-400'
+    } mt-5 flex justify-center space-x-9 rounded-md p-3`}
+  >
+    <p className="text-xl font-semibold">{message}</p>
+  </div>
+);

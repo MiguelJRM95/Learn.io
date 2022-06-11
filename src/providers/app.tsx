@@ -13,7 +13,7 @@ import { useUser } from '../hooks/database/auth';
 
 export const AppProvider = ({ children, profile, user }: AppProviderProps) => {
   return (
-    <AlertProvider template={Alert} timeout={5000}>
+    <AlertProvider template={Alert} timeout={6000} transition={'scale'}>
       <Redux store={reduxStore}>
         <ReactSupabaseProvider
           value={

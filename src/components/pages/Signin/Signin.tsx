@@ -8,8 +8,10 @@ import { signInWithEmail } from './api';
 import { SignInFormData } from '../../../types/schemas/signInFormData';
 import Image from 'next/image';
 import logo from '../../../assets/images/logo.svg';
+import Link from 'next/link';
+import { routes } from '../../../utils/routes';
 
-function Signin() {
+export const Signin = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const alert = useAlert();
@@ -83,6 +85,9 @@ function Signin() {
               Sign in
             </button>
           </form>
+          <Link href={routes.signup}>
+            <p className="visited:text-black-500 mt-5 cursor-pointer text-center text-lg underline hover:text-gray-700">{`Student's Sign up`}</p>
+          </Link>
         </div>
       </div>
 
@@ -93,6 +98,6 @@ function Signin() {
       </div>
     </div>
   );
-}
+};
 
 export default Signin;

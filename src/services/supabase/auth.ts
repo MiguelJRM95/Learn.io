@@ -4,7 +4,11 @@ import { routes } from '../../utils/routes';
 
 import { supabase } from './supabaseClient';
 
-export const signIn = (params: UserCredentials) => supabase.auth.signIn(params);
+export const signIn = (params: UserCredentials) =>
+  supabase.auth.signIn({
+    email: params.email,
+    password: params.password,
+  });
 
 export const signUp = (
   { email, password }: UserCredentials,

@@ -9,6 +9,8 @@ import Image from 'next/image';
 import logo from '../../../assets/images/logo.svg';
 import { SignUpFormData } from '../../../types/schemas/studentSignUpFormData';
 import { emailRegex } from '../../../utils/patterns';
+import Link from 'next/link';
+import { routes } from '../../../utils/routes';
 
 export const Signup = () => {
   const [email, setEmail] = useState('');
@@ -152,6 +154,9 @@ export const Signup = () => {
               Register
             </button>
           </form>
+          <Link href={routes.home}>
+            <p className="visited:text-black-500 mt-5 cursor-pointer text-center text-lg underline hover:text-gray-700">{`Student's Sign in`}</p>
+          </Link>
         </div>
       </div>
 
