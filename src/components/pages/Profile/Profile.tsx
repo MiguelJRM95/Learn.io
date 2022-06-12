@@ -1,138 +1,130 @@
 import Image from 'next/image';
-import React from 'react';
+import React, { useState } from 'react';
 
-import dummyPic from '../../../assets/images/logo.svg';
+import dummyPic from '../../../assets/images/dummy_profile_pic.jpg';
 import { Navbar } from '../../layout/navbar/Navbar';
+import * as Yup from 'yup';
+import { yupResolver } from '@hookform/resolvers/yup';
+import { useForm } from 'react-hook-form';
+import { editNameFormData } from '../../../types/schemas/editNameFormData';
+import { useAlert } from 'react-alert';
+import { changeName } from './api';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const Profile = ({ userProfile }: any) => {
-  console.log(userProfile);
+  const [editFirstName, setEditFirstName] = useState(false);
+  const [firstName, setFirstName] = useState('');
+  const [lastName, setLastName] = useState('');
+  const alert = useAlert();
   const profile = userProfile.profile[0];
+
+  const nameFormSchema = Yup.object().shape({
+    firstName: Yup.string().required(),
+    lastName: Yup.string().required(),
+  });
+
+  const nameFormOptions = { resolver: yupResolver(nameFormSchema) };
+  const {
+    register: nameRegister,
+    handleSubmit: nameHandleSubmit,
+    formState: nameFormState,
+  } = useForm<editNameFormData>(nameFormOptions);
+
+  const { errors: nameErrors } = nameFormState;
+
+  const onSubmitName = async () => {
+    const { error, data } = await changeName(profile.email, { firstName, lastName });
+    console.log(error);
+    if (error) return alert.error('Something went wrong changing your name');
+    if (data) {
+      setEditFirstName(!editFirstName);
+      return alert.success('Congrats your name has been change succesfully' + JSON.stringify(data));
+    }
+  };
 
   return (
     <>
       <Navbar userProfile={profile} />
-      <main className="profile-page">
-        <section className="relative block" style={{ height: '500px' }}>
-          <div
-            className="absolute top-0 w-full h-full bg-center bg-cover"
-            style={{
-              backgroundImage: `url(${dummyPic})`,
+      <div className="m-auto my-28 w-fit max-w-lg items-center justify-center overflow-hidden rounded-2xl bg-slate-200 shadow-xl">
+        <div className="h-44 bg-white"></div>
+        <div className="-mt-20 flex justify-center">
+          <Image alt="..." src={dummyPic} height={250} width={250} className="rounded-full" />
+        </div>
+        <div>
+          <div className="mt-5 mb-1 px-3  flex justify-center space-x-4">
+            <p className="text-center text-3xl font-bold">
+              {profile.first_name} {profile.last_name}
+            </p>
+          </div>
+        </div>
+        <div className="mb-5 px-3 text-center text-sky-500 text-xl">
+          {profile.role[0].toUpperCase() + profile.role.slice(1).toLowerCase()}
+        </div>
+        <blockquote>
+          <p className="mx-2 mb-7 text-center text-base">{profile.email}</p>
+        </blockquote>
+        <div className="flex justify-center content-evenly gap-3">
+          <button className="p-3 bg-black text-white m-2 rounded-md font-semibold hover:bg-slate-700">
+            Remove Avatar
+          </button>
+          <button className="p-3 bg-black text-white m-2 rounded-md font-semibold hover:bg-slate-700">
+            Change Avatar
+          </button>
+          <button
+            onClick={() => {
+              setEditFirstName(!editFirstName);
             }}
+            className="p-3 bg-black text-white m-2 rounded-md font-semibold hover:bg-slate-700"
           >
-            <span id="blackOverlay" className="w-full h-full absolute opacity-50 bg-black"></span>
-          </div>
-          <div
-            className="top-auto bottom-0 left-0 right-0 w-full absolute pointer-events-none overflow-hidden"
-            style={{ height: '70px' }}
+            Change Name
+          </button>
+        </div>
+        {editFirstName ? (
+          <form
+            onSubmit={nameHandleSubmit(onSubmitName)}
+            className="m-5 flex flex-col items-center"
           >
-            <svg
-              className="absolute bottom-0 overflow-hidden"
-              xmlns="http://www.w3.org/2000/svg"
-              preserveAspectRatio="none"
-              version="1.1"
-              viewBox="0 0 2560 100"
-              x="0"
-              y="0"
-            >
-              <polygon
-                className="text-gray-300 fill-current"
-                points="2560 0 2560 100 0 100"
-              ></polygon>
-            </svg>
-          </div>
-        </section>
-        <section className="relative py-16 bg-gray-300">
-          <div className="container mx-auto px-4">
-            <div className="relative flex flex-col min-w-0 break-words bg-white w-full mb-6 shadow-xl rounded-lg -mt-64">
-              <div className="px-6">
-                <div className="flex flex-wrap justify-center">
-                  <div className="w-full lg:w-3/12 px-4 lg:order-2 flex justify-center">
-                    <div className="relative">
-                      <Image
-                        alt="..."
-                        src={dummyPic}
-                        className="shadow-xl rounded-full h-auto align-middle border-none absolute -m-16 -ml-20 lg:-ml-16"
-                        style={{ maxWidth: '150px' }}
-                        layout="fill"
-                      />
-                    </div>
-                  </div>
-                  <div className="w-full lg:w-4/12 px-4 lg:order-3 lg:text-right lg:self-center">
-                    <div className="py-6 px-3 mt-32 sm:mt-0">
-                      <button
-                        className="bg-pink-500 active:bg-pink-600 uppercase text-white font-bold hover:shadow-md shadow text-xs px-4 py-2 rounded outline-none focus:outline-none sm:mr-2 mb-1"
-                        type="button"
-                        style={{ transition: 'all .15s ease' }}
-                      >
-                        Connect
-                      </button>
-                    </div>
-                  </div>
-                  <div className="w-full lg:w-4/12 px-4 lg:order-1">
-                    <div className="flex justify-center py-4 lg:pt-4 pt-8">
-                      <div className="mr-4 p-3 text-center">
-                        <span className="text-xl font-bold block uppercase tracking-wide text-gray-700">
-                          22
-                        </span>
-                        <span className="text-sm text-gray-500">Friends</span>
-                      </div>
-                      <div className="mr-4 p-3 text-center">
-                        <span className="text-xl font-bold block uppercase tracking-wide text-gray-700">
-                          10
-                        </span>
-                        <span className="text-sm text-gray-500">Photos</span>
-                      </div>
-                      <div className="lg:mr-4 p-3 text-center">
-                        <span className="text-xl font-bold block uppercase tracking-wide text-gray-700">
-                          89
-                        </span>
-                        <span className="text-sm text-gray-500">Comments</span>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                <div className="text-center mt-12">
-                  <h3 className="text-4xl font-semibold leading-normal mb-2 text-gray-800">
-                    {profile?.first_name} {profile?.last_name}
-                  </h3>
-                  <div className="text-sm leading-normal mt-0 mb-2 text-gray-500 font-bold uppercase">
-                    <i className="fas fa-map-marker-alt mr-2 text-lg text-gray-500"></i> Los
-                    Angeles, California
-                  </div>
-                  <div className="mb-2 text-gray-700 mt-10">
-                    <i className="fas fa-briefcase mr-2 text-lg text-gray-500"></i>
-                    Solution Manager - Creative Tim Officer
-                  </div>
-                  <div className="mb-2 text-gray-700">
-                    <i className="fas fa-university mr-2 text-lg text-gray-500"></i>
-                    University of Computer Science
-                  </div>
-                </div>
-                <div className="mt-10 py-10 border-t border-gray-300 text-center">
-                  <div className="flex flex-wrap justify-center">
-                    <div className="w-full lg:w-9/12 px-4">
-                      <p className="mb-4 text-lg leading-relaxed text-gray-800">
-                        An artist of considerable range, Jenna the name taken by Melbourne-raised,
-                        Brooklyn-based Nick Murphy writes, performs and records all of his own
-                        music, giving it a warm, intimate feel with a solid groove structure. An
-                        artist of considerable range.
-                      </p>
-                      <a
-                        href="#pablo"
-                        className="font-normal text-pink-500"
-                        onClick={(e) => e.preventDefault()}
-                      >
-                        Show more
-                      </a>
-                    </div>
-                  </div>
-                </div>
+            <div className="flex flex-row justify-between gap-2">
+              <div className="flex w-full flex-col pt-4">
+                <label htmlFor="firstName" className="ml-2 text-lg">
+                  First Name
+                </label>
+                <input
+                  type="text"
+                  id="firstName"
+                  placeholder="First name"
+                  value={firstName}
+                  {...nameRegister('firstName')}
+                  onInput={(e) => setFirstName((e.target as HTMLInputElement).value)}
+                  className="focus:shadow-outline mt-1 w-full appearance-none rounded border py-2 px-3 leading-tight text-gray-700 shadow focus:outline-none"
+                />
+                <div className="text-error text-center">{nameErrors.firstName?.message}</div>
+              </div>
+              <div className="flex w-full flex-col pt-4">
+                <label htmlFor="lastName" className="ml-2 text-lg">
+                  Last Name
+                </label>
+                <input
+                  type="text"
+                  id="lastName"
+                  placeholder="Last name"
+                  value={lastName}
+                  {...nameRegister('lastName')}
+                  onInput={(e) => setLastName((e.target as HTMLInputElement).value)}
+                  className="focus:shadow-outline mt-1 w-full appearance-none rounded border py-2 px-3 leading-tight text-gray-700 shadow focus:outline-none"
+                />
+                <div className="text-error text-center">{nameErrors.firstName?.message}</div>
               </div>
             </div>
-          </div>
-        </section>
-      </main>
+            <button
+              type="submit"
+              className=" max-w-fit p-3 px-11 bg-black text-white m-2 rounded-md font-semibold hover:bg-slate-700"
+            >
+              Save
+            </button>
+          </form>
+        ) : null}
+      </div>
     </>
   );
 };
