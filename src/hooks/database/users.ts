@@ -9,6 +9,7 @@ interface ParamTypes {
 }
 
 export interface ProfileData {
+  user_id: null | string;
   avatar_url: null | string;
   first_name: null | string;
   last_name: null | string;

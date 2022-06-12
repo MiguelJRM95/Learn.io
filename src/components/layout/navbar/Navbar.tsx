@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import React, { useState } from 'react';
 import { ProfileData } from '../../../hooks/database/users';
+import { supabase } from '../../../services/supabase/supabaseClient';
 import { routes } from '../../../utils/routes';
 
 type Props = {
@@ -60,7 +61,7 @@ export const Navbar = ({ userProfile }: Props) => {
                 Grades
               </a>
             </Link>
-            <Link href="/">
+            <Link href="/profile">
               <a className="lg:inline-flex lg:w-auto w-full px-3 py-2 rounded text-slate-800 font-bold items-center justify-center hover:bg-black hover:text-white text-xl">
                 Profile
               </a>
@@ -72,6 +73,16 @@ export const Navbar = ({ userProfile }: Props) => {
                 </a>
               </Link>
             ) : null}
+            <button
+              onClick={(e) => {
+                e.preventDefault();
+                supabase.auth.signOut();
+              }}
+            >
+              <a className="lg:inline-flex lg:w-auto w-full px-3 py-2 rounded text-slate-800 font-bold items-center justify-center hover:bg-black hover:text-white text-xl">
+                Log out
+              </a>
+            </button>
           </div>
         </div>
       </nav>
