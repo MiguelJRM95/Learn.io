@@ -59,7 +59,7 @@ export const Signup = () => {
     <div className="flex w-full flex-wrap">
       <div className="flex w-full flex-col md:w-1/2">
         <div className="flex justify-center pt-6 md:-mb-6 md:justify-start md:pl-8">
-          <a href="#" className="bg-black p-4 text-xl font-extrabold text-white">
+          <a href={routes.home} className="bg-black p-4 text-xl font-extrabold text-white">
             Learn.io
           </a>
         </div>

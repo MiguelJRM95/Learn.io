@@ -35,7 +35,6 @@ const Home: NextPage = () => {
     return <AuthLoadingScreen />;
   }
   /* is signed in */
-  console.log(user);
   if (isSignedIn) return <SignedInPage />;
 
   return <SignInPage />;
