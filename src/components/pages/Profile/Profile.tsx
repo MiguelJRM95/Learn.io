@@ -1,7 +1,7 @@
 import Image from 'next/image';
 import React, { useState } from 'react';
 
-import dummyPic from '../../../assets/images/dummy_profile_pic.jpg';
+import dummyPic from '../../../assets/images/default-profile.png';
 import { Navbar } from '../../layout/navbar/Navbar';
 import * as Yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
@@ -9,6 +9,8 @@ import { useForm } from 'react-hook-form';
 import { editNameFormData } from '../../../types/schemas/editNameFormData';
 import { useAlert } from 'react-alert';
 import { changeName } from './api';
+import { UiFileInputButton } from '../../UIFileInputButton/UiFileInputButton';
+import { uploadFileRequest } from '../../../services/upload/upload';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const Profile = ({ userProfile }: any) => {
@@ -34,12 +36,19 @@ export const Profile = ({ userProfile }: any) => {
 
   const onSubmitName = async () => {
     const { error, data } = await changeName(profile.email, { firstName, lastName });
-    console.log(error);
     if (error) return alert.error('Something went wrong changing your name');
     if (data) {
       setEditFirstName(!editFirstName);
-      return alert.success('Congrats your name has been change succesfully' + JSON.stringify(data));
+      return alert.success('Congrats your name has been change succesfully');
     }
+  };
+
+  const onChangeAvatar = async (formData: FormData) => {
+    const response = await uploadFileRequest(formData, (event) => {
+      console.log(`Current progress:`, Math.round((event.loaded * 100) / event.total));
+    });
+
+    console.log('response', response);
   };
 
   return (
@@ -48,12 +57,19 @@ export const Profile = ({ userProfile }: any) => {
       <div className="m-auto my-28 w-fit max-w-lg items-center justify-center overflow-hidden rounded-2xl bg-slate-200 shadow-xl">
         <div className="h-44 bg-white"></div>
         <div className="-mt-20 flex justify-center">
-          <Image alt="..." src={dummyPic} height={250} width={250} className="rounded-full" />
+          <Image
+            alt="..."
+            src={profile.avatarUrl || dummyPic}
+            height={250}
+            width={250}
+            className="rounded-full"
+          />
         </div>
         <div>
           <div className="mt-5 mb-1 px-3  flex justify-center space-x-4">
             <p className="text-center text-3xl font-bold">
-              {profile.first_name} {profile.last_name}
+              {firstName !== '' ? firstName : profile.first_name}{' '}
+              {lastName !== '' ? lastName : profile.last_name}
             </p>
           </div>
         </div>
@@ -67,9 +83,12 @@ export const Profile = ({ userProfile }: any) => {
           <button className="p-3 bg-black text-white m-2 rounded-md font-semibold hover:bg-slate-700">
             Remove Avatar
           </button>
-          <button className="p-3 bg-black text-white m-2 rounded-md font-semibold hover:bg-slate-700">
-            Change Avatar
-          </button>
+          <UiFileInputButton
+            label="Change Avatar"
+            uploadFileName="theFiles"
+            onChange={onChangeAvatar}
+            className="p-3 bg-black text-white m-2 rounded-md font-semibold hover:bg-slate-700"
+          />
           <button
             onClick={() => {
               setEditFirstName(!editFirstName);
@@ -98,7 +117,9 @@ export const Profile = ({ userProfile }: any) => {
                   onInput={(e) => setFirstName((e.target as HTMLInputElement).value)}
                   className="focus:shadow-outline mt-1 w-full appearance-none rounded border py-2 px-3 leading-tight text-gray-700 shadow focus:outline-none"
                 />
-                <div className="text-error text-center">{nameErrors.firstName?.message}</div>
+                <div className="text-error text-center">
+                  {nameErrors.firstName?.message ? 'First name required' : null}
+                </div>
               </div>
               <div className="flex w-full flex-col pt-4">
                 <label htmlFor="lastName" className="ml-2 text-lg">
@@ -113,7 +134,9 @@ export const Profile = ({ userProfile }: any) => {
                   onInput={(e) => setLastName((e.target as HTMLInputElement).value)}
                   className="focus:shadow-outline mt-1 w-full appearance-none rounded border py-2 px-3 leading-tight text-gray-700 shadow focus:outline-none"
                 />
-                <div className="text-error text-center">{nameErrors.firstName?.message}</div>
+                <div className="text-error text-center">
+                  {nameErrors.lastName?.message ? 'Last name required' : null}
+                </div>
               </div>
             </div>
             <button
