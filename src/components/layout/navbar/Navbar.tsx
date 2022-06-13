@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import { useRouter } from 'next/router';
 import React, { useState } from 'react';
 import { ProfileData } from '../../../hooks/database/users';
 import { supabase } from '../../../services/supabase/supabaseClient';
@@ -10,6 +11,7 @@ type Props = {
 
 export const Navbar = ({ userProfile }: Props) => {
   const [active, setActive] = useState(false);
+  const router = useRouter();
 
   const handleClick = () => {
     setActive(!active);
@@ -61,13 +63,13 @@ export const Navbar = ({ userProfile }: Props) => {
                 Grades
               </a>
             </Link>
-            <Link href="/profile">
+            <Link href={routes.profile}>
               <a className="lg:inline-flex lg:w-auto w-full px-3 py-2 rounded text-slate-800 font-bold items-center justify-center hover:bg-black hover:text-white text-xl">
                 Profile
               </a>
             </Link>
             {userProfile?.role !== 'STUDENT' ? (
-              <Link href="/">
+              <Link href={routes.admin}>
                 <a className="lg:inline-flex lg:w-auto w-full px-3 py-2 rounded text-slate-800 font-bold items-center justify-center hover:bg-black hover:text-white text-xl">
                   Admin
                 </a>
@@ -77,6 +79,7 @@ export const Navbar = ({ userProfile }: Props) => {
               onClick={(e) => {
                 e.preventDefault();
                 supabase.auth.signOut();
+                router.reload();
               }}
             >
               <a className="lg:inline-flex lg:w-auto w-full px-3 py-2 rounded text-slate-800 font-bold items-center justify-center hover:bg-black hover:text-white text-xl">

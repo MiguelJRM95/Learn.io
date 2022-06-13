@@ -19,7 +19,6 @@ export const Profile = ({ userProfile }: any) => {
   const [lastName, setLastName] = useState('');
   const alert = useAlert();
   const profile = userProfile.profile[0];
-  console.log('desde perfil', profile.avatar_url);
 
   const nameFormSchema = Yup.object().shape({
     firstName: Yup.string().required(),
