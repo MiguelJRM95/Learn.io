@@ -13,7 +13,7 @@ export const getServerSideProps = withPageAuth({
     const { user } = await getUser(ctx);
     const { data: profile } = await supabaseServerClient(ctx)
       .from('users')
-      .select('first_name, last_name, role, email, is_accepted')
+      .select('first_name, last_name, role, email, is_accepted, avatar_url')
       .match({ user_id: user?.id });
 
     if (profile) {

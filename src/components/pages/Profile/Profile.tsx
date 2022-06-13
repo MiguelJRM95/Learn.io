@@ -8,7 +8,7 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import { useForm } from 'react-hook-form';
 import { editNameFormData } from '../../../types/schemas/editNameFormData';
 import { useAlert } from 'react-alert';
-import { changeName } from './api';
+import { changeAvatar, changeName, removeAvatar } from './api';
 import { UiFileInputButton } from '../../UIFileInputButton/UiFileInputButton';
 import { uploadFileRequest } from '../../../services/upload/upload';
 
@@ -19,6 +19,7 @@ export const Profile = ({ userProfile }: any) => {
   const [lastName, setLastName] = useState('');
   const alert = useAlert();
   const profile = userProfile.profile[0];
+  console.log('desde perfil', profile.avatar_url);
 
   const nameFormSchema = Yup.object().shape({
     firstName: Yup.string().required(),
@@ -43,12 +44,34 @@ export const Profile = ({ userProfile }: any) => {
     }
   };
 
-  const onChangeAvatar = async (formData: FormData) => {
+  const onChangeAvatar = async (email: string, formData: FormData) => {
+    formData.append('email', email);
     const response = await uploadFileRequest(formData, (event) => {
       console.log(`Current progress:`, Math.round((event.loaded * 100) / event.total));
     });
 
-    console.log('response', response);
+    const { error, data } = response;
+    console.log(response);
+    if (error) return alert.error(response.error as string);
+    if (data) {
+      const { data: supabaseData, error } = await changeAvatar(data[0], data[1]);
+      if (error) {
+        return alert.error('Your profile avatar has change!');
+      }
+      if (supabaseData) {
+        return alert.success('Your profile avatar has change!');
+      }
+    }
+  };
+
+  const onRemoveAvatar = async (email: string) => {
+    const { data, error } = await removeAvatar(email);
+    if (error) {
+      return alert.error('Your profile avatar can not be removed!');
+    }
+    if (data) {
+      return alert.success('Your profile avatar has been removed!');
+    }
   };
 
   return (
@@ -59,10 +82,11 @@ export const Profile = ({ userProfile }: any) => {
         <div className="-mt-20 flex justify-center">
           <Image
             alt="..."
-            src={profile.avatarUrl || dummyPic}
+            src={profile.avatar_url ? `/uploads/${profile.avatar_url}` : dummyPic}
             height={250}
             width={250}
             className="rounded-full"
+            priority
           />
         </div>
         <div>
@@ -80,13 +104,20 @@ export const Profile = ({ userProfile }: any) => {
           <p className="mx-2 mb-7 text-center text-base">{profile.email}</p>
         </blockquote>
         <div className="flex justify-center content-evenly gap-3">
-          <button className="p-3 bg-black text-white m-2 rounded-md font-semibold hover:bg-slate-700">
+          <button
+            onClick={() => {
+              onRemoveAvatar(profile.email);
+            }}
+            className="p-3 bg-black text-white m-2 rounded-md font-semibold hover:bg-slate-700"
+          >
             Remove Avatar
           </button>
           <UiFileInputButton
             label="Change Avatar"
             uploadFileName="theFiles"
-            onChange={onChangeAvatar}
+            onChange={(formData) => {
+              onChangeAvatar(profile.email, formData);
+            }}
             className="p-3 bg-black text-white m-2 rounded-md font-semibold hover:bg-slate-700"
           />
           <button
