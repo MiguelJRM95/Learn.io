@@ -14,7 +14,7 @@ export interface ProfileData {
   first_name: null | string;
   last_name: null | string;
   role: null | string;
-  is_accepted: boolean;
+  is_accepted: null | boolean;
 }
 
 export const useProfile = ({ options }: ParamTypes = {}): UseSelectResponse<ProfileData> =>
