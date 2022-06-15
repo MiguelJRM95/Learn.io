@@ -51,7 +51,7 @@ export const Signup = () => {
     const { error, user } = await signUpWithEmail({ email, password }, { firstName, lastName });
     if (error) return alert.error('Something went wrong');
     if (user) {
-      return alert.success('Congrats Sign up request success with email: ' + ' ' + email);
+      return alert.success('Congrats Teacher Sign up successfully with email: ' + ' ' + email);
     }
   };
 

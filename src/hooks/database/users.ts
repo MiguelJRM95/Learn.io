@@ -14,6 +14,7 @@ export interface ProfileData {
   first_name: null | string;
   last_name: null | string;
   role: null | string;
+  email: null | string;
   is_accepted: null | boolean;
 }
 

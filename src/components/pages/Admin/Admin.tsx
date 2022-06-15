@@ -2,6 +2,7 @@
 import React, { useState } from 'react';
 import { ProfileData, useProfile } from '../../../hooks/database/users';
 import AdminActionButton from '../../AdminActionButton/AdminActionButton';
+import CreateTeacherForm from '../../CreateTeacherForm/CreateTeacherForm';
 import { Navbar } from '../../layout/navbar/Navbar';
 import StudentCard from '../../StudentCard/StudentCard';
 
@@ -11,6 +12,8 @@ export const Admin = ({ userProfile }: any) => {
   const [{ data: profilesData }] = useProfile();
   const adminProfile = userProfile.profile[0];
   const [showStudents, setShowStudents] = useState(false);
+  const [showTeacherForm, setShowTeacherForm] = useState(false);
+  const [showCreateSubjectForm, setShowCreateSubjectForm] = useState(false);
   const [filterStudent, setFilterStudents] = useState('');
 
   const filterByName = (
@@ -22,12 +25,8 @@ export const Admin = ({ userProfile }: any) => {
     }
 
     return profilesData?.filter((student) => {
-      if (student.first_name && student.last_name) {
-        return student.first_name
-          .trim()
-          .concat(student.last_name.trim())
-          .toLowerCase()
-          .includes(filterStudent.trim().toLowerCase());
+      if (student.email) {
+        return student.email.toLowerCase().includes(filterStudent.toLowerCase());
       }
     });
   };
@@ -37,13 +36,28 @@ export const Admin = ({ userProfile }: any) => {
       <Navbar userProfile={adminProfile} />
       <div className="m-10 flex flex-col items-center justify-center">
         <div className="m-5 flex gap-5 flex-col md:flex-row">
-          <AdminActionButton label="Create Subject" description="Let's create a new subject!" />
           <AdminActionButton
+            onClick={() => {
+              setShowStudents(false);
+              setShowTeacherForm(false);
+              setShowCreateSubjectForm(!showCreateSubjectForm);
+            }}
+            label="Create Subject"
+            description="Let's create a new subject!"
+          />
+          <AdminActionButton
+            onClick={() => {
+              setShowCreateSubjectForm(false);
+              setShowStudents(false);
+              setShowTeacherForm(!showTeacherForm);
+            }}
             label="Create Teacher Account"
             description="Join a new teacher to the team!"
           />
           <AdminActionButton
             onClick={() => {
+              setShowCreateSubjectForm(false);
+              setShowTeacherForm(false);
               setShowStudents(!showStudents);
             }}
             label="Students"
@@ -79,7 +93,7 @@ export const Admin = ({ userProfile }: any) => {
                         setFilterStudents(e.target.value);
                       }}
                       className="p-4 pl-10 xl:w-96 sm:w-52 md:w-96 text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white focus:outline-none"
-                      placeholder="Search Student..."
+                      placeholder="Search Student By Email..."
                       required
                     />
                   </div>
@@ -88,18 +102,20 @@ export const Admin = ({ userProfile }: any) => {
                   {filterStudent !== ''
                     ? filterByName(profilesData)?.map((profile) => {
                         if (profile.role === 'STUDENT') {
-                          return <StudentCard studentProfile={profile} />;
+                          return <StudentCard key={profile.user_id} studentProfile={profile} />;
                         }
                       })
                     : profilesData?.map((profile) => {
                         if (profile.role === 'STUDENT') {
-                          return <StudentCard studentProfile={profile} />;
+                          return <StudentCard key={profile.user_id} studentProfile={profile} />;
                         }
                       })}
                 </div>
               </div>
             </>
           ) : null}
+          {showTeacherForm ? <CreateTeacherForm /> : null}
+          {showCreateSubjectForm ? 'FORM' : null}
         </div>
       </div>
     </>
