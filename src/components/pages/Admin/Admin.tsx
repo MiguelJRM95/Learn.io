@@ -2,6 +2,7 @@
 import React, { useState } from 'react';
 import { ProfileData, useProfile } from '../../../hooks/database/users';
 import AdminActionButton from '../../AdminActionButton/AdminActionButton';
+import CreateSubjectForm from '../../CreateSubjectForm/CreateSubjectForm';
 import CreateTeacherForm from '../../CreateTeacherForm/CreateTeacherForm';
 import { Navbar } from '../../layout/navbar/Navbar';
 import StudentCard from '../../StudentCard/StudentCard';
@@ -115,7 +116,7 @@ export const Admin = ({ userProfile }: any) => {
             </>
           ) : null}
           {showTeacherForm ? <CreateTeacherForm /> : null}
-          {showCreateSubjectForm ? 'FORM' : null}
+          {showCreateSubjectForm ? <CreateSubjectForm /> : null}
         </div>
       </div>
     </>
