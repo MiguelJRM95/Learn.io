@@ -5,8 +5,7 @@ import {
 } from '@supabase/supabase-auth-helpers/nextjs';
 import React from 'react';
 
-import { Admin as AdminPage } from '../components/pages/Admin/Admin';
-import { ProfileData } from '../hooks/database/users';
+import { Find as FindPage, FindProps } from '../components/pages/Find/Find';
 
 export const getServerSideProps = withPageAuth({
   authRequired: true,
@@ -17,13 +16,16 @@ export const getServerSideProps = withPageAuth({
       .from('users')
       .select('first_name, last_name, role, email, is_accepted, avatar_url')
       .eq('user_id', user?.id);
+    const { data: subjects } = await supabaseServerClient(ctx).from('subject').select('*');
 
-    if (profile) {
-      return { props: { profile } };
+    if (subjects && profile) {
+      return { props: { subjects, profile, user } };
     }
     return { props: {} };
   },
 });
 
-const Admin = (profile: ProfileData[]) => <AdminPage userProfile={profile} />;
-export default Admin;
+const Find = ({ subjects, profile, user }: FindProps) => (
+  <FindPage subjects={subjects} profile={profile} user={user} />
+);
+export default Find;

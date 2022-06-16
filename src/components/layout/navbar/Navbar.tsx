@@ -53,7 +53,7 @@ export const Navbar = ({ userProfile }: Props) => {
                 My Subjects
               </a>
             </Link>
-            <Link href="/">
+            <Link href={routes.find}>
               <a className="lg:inline-flex lg:w-auto w-full px-3 py-2 rounded text-slate-800 font-bold items-center justify-center hover:bg-black hover:text-white text-xl">
                 Find
               </a>

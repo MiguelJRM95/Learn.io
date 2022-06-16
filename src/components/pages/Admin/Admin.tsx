@@ -8,10 +8,13 @@ import { Navbar } from '../../layout/navbar/Navbar';
 import StudentCard from '../../StudentCard/StudentCard';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-export const Admin = ({ userProfile }: any) => {
-  // eslint-disable-next-line no-unused-vars
+type Props = {
+  userProfile: ProfileData[];
+};
+
+export const Admin = ({ userProfile }: Props) => {
   const [{ data: profilesData }] = useProfile();
-  const adminProfile = userProfile.profile[0];
+  const adminProfile = userProfile[0];
   const [showStudents, setShowStudents] = useState(false);
   const [showTeacherForm, setShowTeacherForm] = useState(false);
   const [showCreateSubjectForm, setShowCreateSubjectForm] = useState(false);

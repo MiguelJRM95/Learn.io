@@ -3,18 +3,18 @@ import { SubjectType } from '../../types/subjectType';
 import { v4 } from 'uuid';
 
 export const createSubject = ({
-  subjectName,
-  subjectField,
-  subjectYear,
-  password,
+  subject_name,
+  subject_field,
+  subject_year,
+  subject_password,
 }: SubjectType) => {
   return supabase.from('subject').insert([
     {
       subject_id: v4(),
-      subject_name: subjectName,
-      subject_field: subjectField,
-      subject_year: subjectYear,
-      subject_password: password,
+      subject_name: subject_name,
+      subject_field: subject_field,
+      subject_year: subject_year,
+      subject_password: subject_password,
     },
   ]);
 };
