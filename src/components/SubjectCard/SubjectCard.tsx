@@ -2,7 +2,7 @@ import Image from 'next/image';
 import React, { useEffect, useState } from 'react';
 import { v4 } from 'uuid';
 import { SubjectType } from '../../types/subjectType';
-import { getProfilesImages } from './api';
+import { checkUserAlreadyEnrolled, getProfilesImages } from './api';
 import dummyPic from '../../assets/images/default-profile.png';
 import { AvatarUrlType } from '../../types/avatarUrlType';
 import PaswordModal from './PasswordModal/PaswordModal';
@@ -15,6 +15,25 @@ type Props = {
 const SubjectCard = ({ subject, uuid }: Props) => {
   const [profileImages, setProfileImages] = useState<Array<AvatarUrlType>>([]);
   const [showPasswordModal, setShowPasswordModal] = useState(false);
+  const [disabled, setDisabled] = useState(false);
+
+  const closeModal = (close: boolean) => {
+    setShowPasswordModal(!close);
+  };
+
+  const disableEnroll = (disable: boolean) => {
+    setDisabled(disable);
+  };
+
+  const checkUserEnrolled = async (subject_id: string, uuid: string) => {
+    const { data, error } = await checkUserAlreadyEnrolled(subject_id, uuid);
+    if (data) {
+      if (data.length > 0) {
+        setDisabled(true);
+      }
+    }
+    if (error) console.log(error);
+  };
 
   const fetchProfileImages = async (subject_id: string) => {
     const { data, error } = await getProfilesImages(subject_id);
@@ -26,7 +45,8 @@ const SubjectCard = ({ subject, uuid }: Props) => {
 
   useEffect(() => {
     fetchProfileImages(subject.subject_id);
-  }, [subject.subject_id]);
+    checkUserEnrolled(subject.subject_id, uuid);
+  }, [subject.subject_id, uuid, disabled]);
 
   return (
     <>
@@ -36,10 +56,11 @@ const SubjectCard = ({ subject, uuid }: Props) => {
           <button
             onClick={() => {
               setShowPasswordModal(!showPasswordModal);
-
-              //enrollStudentIntoASubject(subject.subject_id, uuid);
             }}
-            className="bg-black text-lg font-bold text-white hover:bg-gray-700 absolute -top-1 -right-9 transform -translate-y-1/2 w-10 h-10 border-2 border-white dark:border-gray-800 rounded-full text-center"
+            className={`bg-black text-lg font-bold text-white hover:bg-gray-700 absolute -top-1 -right-9 transform -translate-y-1/2 w-10 h-10 border-2 border-white dark:border-gray-800 rounded-full text-center ${
+              disabled ? 'disabled:bg-slate-500' : null
+            }`}
+            disabled={disabled}
           >
             +
           </button>
@@ -75,9 +96,8 @@ const SubjectCard = ({ subject, uuid }: Props) => {
       </div>
       {showPasswordModal ? (
         <PaswordModal
-          onClose={() => {
-            setShowPasswordModal(false);
-          }}
+          onClose={closeModal}
+          disabled={disableEnroll}
           subject_id={subject.subject_id}
           uuid={uuid}
         />

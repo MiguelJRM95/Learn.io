@@ -55,7 +55,7 @@ export const Find = ({ subjects, profile, user }: FindProps) => {
                     setFilterCourse(e.target.value);
                   }}
                   className="p-4 pl-10 xl:w-96 sm:w-52 md:w-96 text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white focus:outline-none"
-                  placeholder="Search Student By Email..."
+                  placeholder="Search Subject..."
                   required
                 />
               </div>

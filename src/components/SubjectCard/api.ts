@@ -15,6 +15,10 @@ export const enrollIntoASubject = (subject_id: string, uuid: string) => {
     .insert([{ user_subject_id: v4(), user_id: uuid, subject_id: subject_id }]);
 };
 
-export const checkSubjectPassword = async (subject_id: string, subject_password: string) => {
+export const checkSubjectPassword = (subject_id: string, subject_password: string) => {
   return supabase.from('subject').select('*').match({ subject_id, subject_password });
+};
+
+export const checkUserAlreadyEnrolled = (subject_id: string, uuid: string) => {
+  return supabase.from('user_subject').select('*').match({ subject_id, user_id: uuid });
 };

@@ -3,14 +3,18 @@ import { useAlert } from 'react-alert';
 import { checkSubjectPassword, enrollIntoASubject } from '../api';
 
 type Props = {
-  onClose: React.MouseEventHandler<HTMLButtonElement>;
+  // eslint-disable-next-line no-unused-vars
+  disabled: (disable: boolean) => void;
+  // eslint-disable-next-line no-unused-vars
+  onClose: (close: boolean) => void;
   subject_id: string;
   uuid: string;
 };
 
-const PaswordModal = ({ onClose, subject_id, uuid }: Props) => {
+const PaswordModal = ({ onClose, subject_id, uuid, disabled }: Props) => {
   const alert = useAlert();
   const [inputSubjectPassword, setInputSubjectPassword] = useState('');
+
   const onEnroll = async (subject_id: string, subject_password: string, uuid: string) => {
     const { data, error } = await checkSubjectPassword(subject_id, subject_password);
     if (data) {
@@ -20,8 +24,15 @@ const PaswordModal = ({ onClose, subject_id, uuid }: Props) => {
           uuid
         );
 
-        if (userEnrolled) return alert.success(`You are now enrolled on ${data[0].subject_name}`);
-        if (userNotEnrolled) return alert.error('Something went wrong');
+        if (userEnrolled) {
+          onClose(true);
+          disabled(true);
+          return alert.success(`You are now enrolled on ${data[0].subject_name}`);
+        }
+        if (userNotEnrolled) {
+          onClose(true);
+          return alert.error('Something went wrong');
+        }
       }
       return alert.error('Wrong password');
     }
@@ -61,7 +72,9 @@ const PaswordModal = ({ onClose, subject_id, uuid }: Props) => {
                 <button
                   type="button"
                   className="mt-5 bg-black p-2 text-lg font-bold text-white hover:bg-gray-700 text-center transition duration-150 ease-in-out rounded-md"
-                  onClick={onClose}
+                  onClick={() => {
+                    onClose(true);
+                  }}
                 >
                   Close
                 </button>
