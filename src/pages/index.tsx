@@ -1,4 +1,3 @@
-/* eslint-disable react/jsx-no-undef */
 import type { NextPage } from 'next';
 import { useRouter } from 'next/router';
 import { getFragmentParams } from '../utils/getters';
@@ -30,12 +29,10 @@ const Home: NextPage = () => {
   }
 
   if (isLoading || isWaitingForSignIn) {
-    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-    // @ts-ignore
     return <AuthLoadingScreen />;
   }
   /* is signed in */
-  if (isSignedIn) return <SignedInPage sessionUser={user} />;
+  if (isSignedIn) return <SignedInPage uuid={user.id} />;
 
   return <SignInPage />;
 };

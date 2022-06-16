@@ -64,12 +64,22 @@ export const Find = ({ subjects, profile, user }: FindProps) => {
               {filterCourse !== ''
                 ? filterByName(subjects).map((subject: SubjectType) => {
                     return (
-                      <SubjectCard key={subject.subject_id} subject={subject} uuid={user.id} />
+                      <SubjectCard
+                        key={subject.subject_id}
+                        subject={subject}
+                        uuid={user.id}
+                        isFindPage
+                      />
                     );
                   })
                 : subjects.map((subject: SubjectType) => {
                     return (
-                      <SubjectCard key={subject.subject_id} subject={subject} uuid={user.id} />
+                      <SubjectCard
+                        key={subject.subject_id}
+                        subject={subject}
+                        uuid={user.id}
+                        isFindPage
+                      />
                     );
                   })}
             </div>

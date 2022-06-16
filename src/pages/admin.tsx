@@ -9,7 +9,6 @@ import { Admin as AdminPage } from '../components/pages/Admin/Admin';
 import { ProfileData } from '../hooks/database/users';
 
 export const getServerSideProps = withPageAuth({
-  authRequired: true,
   redirectTo: '/',
   async getServerSideProps(ctx) {
     const { user } = await getUser(ctx);

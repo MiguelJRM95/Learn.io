@@ -8,11 +8,12 @@ import { AvatarUrlType } from '../../types/avatarUrlType';
 import PaswordModal from './PasswordModal/PaswordModal';
 
 type Props = {
+  isFindPage: boolean;
   subject: SubjectType;
   uuid: string;
 };
 
-const SubjectCard = ({ subject, uuid }: Props) => {
+const SubjectCard = ({ subject, uuid, isFindPage }: Props) => {
   const [profileImages, setProfileImages] = useState<Array<AvatarUrlType>>([]);
   const [showPasswordModal, setShowPasswordModal] = useState(false);
   const [disabled, setDisabled] = useState(false);
@@ -50,20 +51,28 @@ const SubjectCard = ({ subject, uuid }: Props) => {
 
   return (
     <>
-      <div className="bg-white p-6 rounded-lg shadow-lg w-96 h-40">
+      <div
+        className={`bg-white p-6 rounded-lg shadow-lg w-96 h-40 ${
+          isFindPage
+            ? null
+            : 'cursor-pointer hover:bg-slate-100 hover:border-2 hover:border-blue-200'
+        }`}
+      >
         <div className="flex justify-between items-baseline relative">
           <h3 className="text-blue-300 mb-4 text-sm font-bold">{subject.subject_field}</h3>
-          <button
-            onClick={() => {
-              setShowPasswordModal(!showPasswordModal);
-            }}
-            className={`bg-black text-lg font-bold text-white hover:bg-gray-700 absolute -top-1 -right-9 transform -translate-y-1/2 w-10 h-10 border-2 border-white dark:border-gray-800 rounded-full text-center ${
-              disabled ? 'disabled:bg-slate-500' : null
-            }`}
-            disabled={disabled}
-          >
-            +
-          </button>
+          {isFindPage ? (
+            <button
+              onClick={() => {
+                setShowPasswordModal(!showPasswordModal);
+              }}
+              className={`bg-black text-lg font-bold text-white hover:bg-gray-700 absolute -top-1 -right-9 transform -translate-y-1/2 w-10 h-10 border-2 border-white dark:border-gray-800 rounded-full text-center ${
+                disabled ? 'disabled:bg-slate-500' : null
+              }`}
+              disabled={disabled}
+            >
+              +
+            </button>
+          ) : null}
         </div>
         <h2 className="text-2xl font-bold mb-2 text-gray-800">{subject.subject_name}</h2>
         <div className="flex justify-between items-baseline">
