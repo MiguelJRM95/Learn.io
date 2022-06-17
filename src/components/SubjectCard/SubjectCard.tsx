@@ -6,6 +6,7 @@ import { checkUserAlreadyEnrolled, getProfilesImages } from './api';
 import dummyPic from '../../assets/images/default-profile.png';
 import { AvatarUrlType } from '../../types/avatarUrlType';
 import PaswordModal from './PasswordModal/PaswordModal';
+import { useRouter } from 'next/router';
 
 type Props = {
   isFindPage: boolean;
@@ -17,6 +18,7 @@ const SubjectCard = ({ subject, uuid, isFindPage }: Props) => {
   const [profileImages, setProfileImages] = useState<Array<AvatarUrlType>>([]);
   const [showPasswordModal, setShowPasswordModal] = useState(false);
   const [disabled, setDisabled] = useState(false);
+  const router = useRouter();
 
   const closeModal = (close: boolean) => {
     setShowPasswordModal(!close);
@@ -53,9 +55,7 @@ const SubjectCard = ({ subject, uuid, isFindPage }: Props) => {
     <>
       <div
         className={`bg-white p-6 rounded-lg shadow-lg w-96 h-40 ${
-          isFindPage
-            ? null
-            : 'cursor-pointer hover:bg-slate-100 hover:border-2 hover:border-blue-200'
+          isFindPage ? null : ' hover:bg-slate-100 hover:border-2 hover:border-blue-200'
         }`}
       >
         <div className="flex justify-between items-baseline relative">
@@ -72,7 +72,16 @@ const SubjectCard = ({ subject, uuid, isFindPage }: Props) => {
             >
               +
             </button>
-          ) : null}
+          ) : (
+            <button
+              onClick={() => {
+                router.push(`/subject/${subject.subject_id}`);
+              }}
+              className={`bg-cyan-500 text-lg font-bold text-white hover:bg-gray-700 absolute -top-1 -right-9 transform -translate-y-1/2 w-10 h-10 border-2 border-white dark:border-gray-800 rounded-full text-center `}
+            >
+              🡢
+            </button>
+          )}
         </div>
         <h2 className="text-2xl font-bold mb-2 text-gray-800">{subject.subject_name}</h2>
         <div className="flex justify-between items-baseline">

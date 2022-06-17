@@ -5,3 +5,10 @@ export type SubjectType = {
   subject_year: string;
   subject_password: string;
 };
+
+export type SubjectTypeQuery = {
+  subjectName: string;
+  subjectField: string;
+  subjectYear: string;
+  password: string;
+};

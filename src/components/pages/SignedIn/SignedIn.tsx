@@ -61,22 +61,24 @@ export const SignedIn = ({ uuid }: Props) => {
             </p>
           </Link>
         ) : null}
-        {subjects
-          ? subjects.map((subject) => {
-              // eslint-disable-next-line @typescript-eslint/no-explicit-any
-              const { subject: realSubject }: any = subject;
-              return (
-                <>
-                  <SubjectCard
-                    key={realSubject.subject_id}
-                    subject={realSubject}
-                    uuid={uuid}
-                    isFindPage={false}
-                  />
-                </>
-              );
-            })
-          : null}
+        <div className="w-screen flex justify-center gap-4 my-4">
+          {subjects
+            ? subjects.map((subject) => {
+                // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                const { subject: realSubject }: any = subject;
+                return (
+                  <>
+                    <SubjectCard
+                      key={realSubject.subject_id}
+                      subject={realSubject}
+                      uuid={uuid}
+                      isFindPage={false}
+                    />
+                  </>
+                );
+              })
+            : null}
+        </div>
       </div>
     </>
   );
